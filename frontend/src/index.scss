@@ -1,0 +1,107 @@
+@import "@Styles/Fonts.scss";
+
+/* App Variables */
+:root {
+  // container
+  --s-container: calc(40px + var(--w-sidebar));
+  --w-sidebar: 254px;
+  --h-header: 45px;
+
+  --body-bg: #ffffffda;
+  --body-bg-hov: #dbdbdb;
+  --body-color: #373737;
+  --link-color: #000080;
+
+  // Header
+  --header-bg: #f1f1f1;
+
+  // Sidebar
+  --sidebar-bg: #e6e6e6;
+  --sidebar-color: #ffffff;
+
+  // keyboard styles
+  --kb-color: rgba(0, 0, 0, 0.5);
+
+  // Buttons
+  --button-bg: #be5f5b;
+  --button-color: #fafafa;
+}
+
+[data-theme="dark"] {
+  --body-bg: #373737;
+  --body-bg-hov: #414141;
+  --body-color: #fff;
+  --link-color: #5656dd;
+
+  // Header
+  --header-bg: #252525;
+
+  // Sidebar
+  --sidebar-bg: #2B2B2B; 
+  
+  // keyboard styles
+  --kb-color: rgba(255, 255, 255, 0.5);
+
+  // Buttons
+  --button-bg: #be5f5b;
+  --button-color: #fafafa;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--body-color);
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--body-color);
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--body-color);
+}
+
+button {
+  border-radius: 5px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: 'Heebo', sans-serif;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: transparent 1px solid;
+  cursor: pointer;
+  transition: border 0.25s;
+}
+button:hover {
+  border: var(--button-color) 1px solid;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+// @inputs
+input {
+  outline: none;
+  border: none;
+}
+
+code {
+  background: color-mix(in srgb, var(--body-bg), #000 15%);
+  border-radius: 7px;
+  padding: 5px;
+}
