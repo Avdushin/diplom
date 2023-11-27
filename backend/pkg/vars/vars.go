@@ -11,6 +11,11 @@ var (
 	DB_PASS = os.Getenv("DB_PASS")
 	DB_HOST = os.Getenv("DB_HOST")
 	DB_PORT = os.Getenv("DB_PORT")
+	// SMTP
+	POST_NAME   = os.Getenv("POST_NAME")
+	POST_PASS   = os.Getenv("POST_PASS")
+	POST_SERVER = os.Getenv("POST_SERVER")
+	POST_PORT   = os.Getenv("POST_PORT")
 	//@ JWT
 	JWTTOKEN = os.Getenv("JWTTOKEN")
 	//@ SSL/TLS certs path

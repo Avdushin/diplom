@@ -12,6 +12,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Generate a JWT token
+func generateToken(userID uint) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": userID,
+		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	})
+
+	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+}
+
 // @ Signup controller
 func Signup(c *gin.Context) {
 	// Get Email/pass off req body
@@ -78,65 +88,39 @@ func Signup(c *gin.Context) {
 
 // @ Login controller
 func Login(c *gin.Context) {
-	// Get the email and pass off req body
 	var body struct {
 		Email    string
 		Password string
 	}
 
 	if c.Bind(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read body",
-		})
-
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read body"})
 		return
 	}
-	// Look up requested user
-	var user models.User
 
+	var user models.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 
 	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email or password"})
 		return
 	}
 
-	// Compare sent in pass with saved user pass hash
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
-
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
-		})
-
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email or password"})
 		return
 	}
 
-	// Generate a jwt token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
-		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
-	})
-
-	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-
+	tokenString, err := generateToken(user.ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to create token",
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to create token"})
 		return
 	}
 
-	// Set the cookie with SameSite=Lax attribute
-	c.SetCookie("Authorization", tokenString, 30*24*60*60, "", os.Getenv("CLIENT_URL"), false, true) // Secure=false, SameSite=Lax
+	c.SetCookie("Authorization", tokenString, 30*24*60*60, "", os.Getenv("CLIENT_URL"), false, true)
 
-	// Respond with JSON indicating successful login
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Успешная авторизация!",
-	})
+	c.JSON(http.StatusOK, gin.H{"message": "Успешная авторизация!"})
 }
 
 // @ JWTValidate controller

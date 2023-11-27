@@ -21,6 +21,8 @@ func SetupRoutes() *gin.Engine {
 	r.GET("/users", controllers.GetAllUsers)
 	r.GET("/users/:id", controllers.GetUserByID)
 	r.POST("/logout", middleware.RequireAuth, controllers.Logout)
+	r.POST("/forgot-password", controllers.ForgotPassword)
+	r.POST("/reset-password", controllers.ResetPassword)
 
 	return r
 }

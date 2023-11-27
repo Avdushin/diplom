@@ -67,6 +67,7 @@ const Login = () => {
         <div className="auth-form__subtext">
           <span>Ещё нет аккаунта? </span>
           <Link to="/signup">Зарегистрируйтесь!</Link>
+          <a href="resetpasswd">Восстановить пароль</a>
         </div>
       </form>
 
