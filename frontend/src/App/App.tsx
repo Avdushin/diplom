@@ -14,6 +14,7 @@ import { KBMap } from "@/Pages/UI/Settings/KBMap";
 import Cookies from "universal-cookie";
 import "./App.scss";
 import PasswordResetForm from "@/Pages/UI/Auth/PasswordResetForm";
+import SetupNewPassword from "@/Pages/UI/Auth/SetupNewPassword";
 
 function App() {
   const cookies = new Cookies();
@@ -58,6 +59,7 @@ function App() {
           <Route path="/signup" element={<SignUP />} />
           <Route path="/login" element={<Login />} />
           <Route path="/resetpasswd" element={<PasswordResetForm />} />
+          <Route path="/setup-new-password/:token" element={<SetupNewPassword />} />
         </Routes>
       </AuthProvider>
     </ThemeProvider>

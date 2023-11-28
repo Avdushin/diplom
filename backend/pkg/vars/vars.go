@@ -1,8 +1,13 @@
 package vars
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 var (
+	_ = godotenv.Load()
 	//@ APP
 	PORT = os.Getenv("PORT")
 	//@ DB

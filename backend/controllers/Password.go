@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"net/smtp"
 	"time"
 	"wtd/initializers"
 	"wtd/models"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/mail.v2"
 )
 
 func ForgotPassword(c *gin.Context) {
@@ -70,47 +70,32 @@ func ForgotPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Password reset link sent successfully"})
 }
 
-//@ Prod SMTP server
-// func sendPasswordResetEmail(to, resetURL string) error {
-// 	m := mail.NewMessage()
-// 	m.SetHeader("From", vars.POST_NAME)
-// 	m.SetHeader("To", to)
-// 	m.SetHeader("Subject", "Password Reset")
-// 	m.SetBody("text/html", fmt.Sprintf("Click <a href='%s'>here</a> to reset your password.", resetURL))
-
-// 	fmt.Println("Port: ", vars.POST_PORT)
-// 	if vars.POST_PORT == "" {
-// 		return errors.New("POST_PORT is empty")
-// 	}
-
-// 	port, err := strconv.Atoi(vars.POST_PORT)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	fmt.Println("Port: ", port)
-
-// 	d := mail.NewDialer(vars.POST_SERVER, port, vars.POST_NAME, vars.POST_PASS)
-
-// 	if err := d.DialAndSend(m); err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
-// mailHog localhost http test
+// Send Reset Password Link To User
 func sendPasswordResetEmail(to, resetURL string) error {
-	m := mail.NewMessage()
-	m.SetHeader("From", vars.POST_NAME)
-	m.SetHeader("To", to)
-	m.SetHeader("Subject", "Password Reset")
-	m.SetBody("text/html", fmt.Sprintf("Click <a href='%s'>here</a> to reset your password.", resetURL))
+	auth := smtp.PlainAuth(
+		"",
+		vars.POST_NAME,
+		vars.POST_PASS,
+		vars.POST_SERVER,
+	)
 
-	d := mail.NewDialer("localhost", 1025, vars.POST_NAME, vars.POST_PASS)
+	msg := fmt.Sprintf("Subject: Восстановление пароля\r\nContent-Type: text/html; charset=UTF-8\r\n\r\nПерейдите по <a href='%s'>ссылке</a> чтобы установить новый пароль.", resetURL)
 
-	if err := d.DialAndSend(m); err != nil {
-		return err
+	// fmt.Println("SMTP Server:", vars.POST_SERVER)
+	// fmt.Println("SMTP Port:", vars.POST_PORT)
+	// fmt.Println("SMTP Name:", vars.POST_NAME)
+	// fmt.Println("SMTP Password:", vars.POST_PASS)
+
+	err := smtp.SendMail(
+		fmt.Sprintf("%s:%s", vars.POST_SERVER, vars.POST_PORT),
+		auth,
+		vars.POST_NAME,
+		[]string{to},
+		[]byte(msg),
+	)
+
+	if err != nil {
+		return fmt.Errorf("Failed to send reset link: %s", err)
 	}
 
 	return nil

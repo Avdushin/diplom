@@ -1,11 +1,13 @@
-import React, { FC, FormEvent, useState } from "react";
+import { FC, FormEvent, useState } from "react";
 import { useForm } from "@Hooks/useForm";
 import useApi from "@Hooks/useAPI";
+import { useNavigate } from "react-router-dom";
 
 const PasswordResetForm: FC = () => {
   const { values, handleChange } = useForm({
     email: "",
   });
+  const navigate = useNavigate(); // Хук для навигации
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -16,6 +18,9 @@ const PasswordResetForm: FC = () => {
       const response = await useApi("forgot-password", "POST", values);
       console.log("Password reset link sent successfully!", response);
       setSuccessMessage("Password reset link sent successfully!");
+
+      // Переходим на новый маршрут после успешной отправки запроса
+      navigate("/setup-new-password");
     } catch (error) {
       console.error("Error sending password reset link:", error);
     }
