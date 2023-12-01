@@ -142,5 +142,5 @@ func ResetPassword(c *gin.Context) {
 
 	// TODO: Optionally, invalidate the used token
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Пароль успешно сброшен"})
 }

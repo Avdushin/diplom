@@ -1,0 +1,16 @@
+.pass-reset {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 40%;
+    margin: 10% auto;
+    gap: 10px;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    .pass-reset {
+        width: 80%;
+        margin: 22% auto;
+    }
+}
